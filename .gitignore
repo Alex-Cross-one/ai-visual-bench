@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.openai/
+.sites-runtime/
+.wrangler/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+wrangler.local.json
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.log
+.DS_Store

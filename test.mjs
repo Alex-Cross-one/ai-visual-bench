@@ -1,0 +1,94 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import vm from 'node:vm';
+const manifest=JSON.parse(await readFile('assets/manifest.json','utf8'));
+assert.equal(manifest.schemaVersion,2);
+assert.equal(manifest.prompts.length,2);
+assert.equal(manifest.runs.length,16);
+assert.equal(new Set(manifest.runs.map(m=>m.id)).size,16);
+for(const prompt of manifest.prompts){assert.ok(manifest.categories.some(category=>category.id===prompt.categoryId));assert.ok(prompt.runIds.includes(prompt.coverRunId));for(const id of prompt.runIds)assert.equal(manifest.runs.find(run=>run.id===id)?.promptId,prompt.id);if(!prompt.promptFile){assert.equal(prompt.promptStatus,'not_provided');assert.equal(prompt.promptText,null);assert.equal(prompt.promptArtifact,null);continue;}const bytes=await readFile(prompt.promptFile);assert.equal(createHash('sha256').update(bytes).digest('hex'),prompt.promptArtifact.sha256);assert.equal(bytes.toString(),prompt.promptText);}
+for(const model of manifest.runs){
+  assert.equal(model.input_tokens+model.output_tokens,model.total_tokens);
+  assert.ok(model.cached_input_tokens<=model.input_tokens);
+  assert.ok(model.reasoning_output_tokens<=model.output_tokens);
+  for(const file of model.artifacts){const bytes=await readFile(file.path);assert.equal(bytes.length,file.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),file.sha256);}
+}
+assert.equal(await readFile('artifacts/prompt.md','utf8'),manifest.prompts[0].promptText);
+console.log('PASS: 16 runs across two real tests, all Token arithmetic, all 49 public original artifacts and stored hashes');
+// A small semantic DOM harness checks logic without claiming browser-rendered QA.
+import {Element} from './test-dom.mjs';
+const document=new Element('document');document.innerHTML=await readFile('index.html','utf8');document.body=document.querySelector('body');document.createElement=t=>new Element(t);document.getElementById=id=>{const walk=e=>e.attrs.id===id?e:e.children.map(walk).find(Boolean);return walk(document);};
+const $=id=>document.getElementById(id);
+$('sort').value='default';
+let fetches=0;
+const window={TEST_DATA:manifest,events:{},addEventListener(type,fn){(this.events[type]??=[]).push(fn);},history:{replaceState(_a,_b,url){window.location._hash=url;}}};
+window.location={_hash:'',get hash(){return this._hash;},set hash(value){this._hash=value;for(const fn of window.events.hashchange||[])fn();}};
+const context=vm.createContext({window,document,Intl,Map,Set,String,console,setTimeout:fn=>{fn();return 0;},clearTimeout(){},fetch:async url=>{fetches++;return{ok:true,text:()=>readFile(url,'utf8')};}});
+vm.runInContext(await readFile('assets/preview.js','utf8'),context);
+vm.runInContext(await readFile('assets/app.js','utf8'),context);
+const settle=async()=>{for(let i=0;i<5;i++)await new Promise(r=>setTimeout(r,10));};
+assert.equal($('library-view').hidden,false);assert.equal($('workspace-view').hidden,true);assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,2);assert.equal(fetches,0);
+const featured=$('prompt-list').querySelectorAll('[data-feature-prompt]')[0];featured.querySelectorAll('[data-feature-step]')[1].fire('click');assert.match(featured.innerHTML,/gpt-6-astra/);featured.querySelectorAll('[data-feature-step]')[1].fire('click');assert.match(featured.innerHTML,/gpt-6-sol/);
+$('prompt-search').value='missing';$('prompt-search').fire('input');assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,0);assert.equal($('prompt-empty').hidden,false);
+$('reset-prompt-filters').fire('click');assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,2);
+$('prompt-search').value='体素';$('prompt-search').fire('input');assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,1);
+$('category-filters').querySelectorAll('[data-category]')[1].fire('click');assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,1);
+window.UI_I18N={translate:(value,locale)=>locale==='en'?value.replace('瓶中沧海','Ocean in a Bottle'):locale==='zh-Hant'?value.replace('瓶中沧海','瓶中滄海'):value,apply(){}};
+$('prompt-search').value='Ocean';$('prompt-search').fire('input');assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,1);
+$('prompt-search').value='滄海';$('prompt-search').fire('input');assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,1);
+$('reset-prompt-filters').fire('click');window.UI_I18N=undefined;
+let scrollResets=0;window.scrollTo=()=>{scrollResets++;};
+window.location.hash='#/prompts/bottle-ocean';assert.equal($('workspace-view').hidden,false);assert.equal($('library-view').hidden,true);assert.equal($('gallery').querySelectorAll('.model-card').length,8);
+assert.equal($('gallery').querySelectorAll('img').length,0);assert.equal($('gallery').querySelectorAll('[data-live-id]').length,8);assert.equal($('workspace-title').textContent,'瓶中沧海');assert.equal(fetches,0);assert.ok(scrollResets>0);
+$('search').value='gpt-6';$('search').fire('input');assert.equal($('gallery').querySelectorAll('.model-card').length,4);
+$('search').value='missing';$('search').fire('input');assert.equal($('gallery').querySelectorAll('.model-card').length,0);assert.equal($('empty-state').hidden,false);
+$('clear-search').fire('click');assert.equal($('gallery').querySelectorAll('.model-card').length,8);
+$('sort').value='tokens-asc';$('sort').fire('change');assert.equal($('gallery').querySelectorAll('.model-card')[0].dataset.model,'bottle-ocean--gpt-5.6-terra');
+const inputs=$('gallery').querySelectorAll('input');inputs[0].checked=true;inputs[0].fire('change');inputs[1].checked=true;inputs[1].fire('change');assert.equal($('compare-open').disabled,false);assert.equal(inputs[2].disabled,false);for(const input of inputs.slice(2,6)){input.checked=true;input.fire('change');}assert.equal(inputs[6].disabled,true);
+$('compare-open').fire('click');assert.equal($('compare-dialog').open,true);assert.equal($('compare-content').querySelectorAll('.compare-column').length,6);assert.equal($('compare-content').querySelectorAll('img').length,0);
+const comparisonStarts=$('compare-content').querySelectorAll('.live-start');comparisonStarts[0].fire('click');comparisonStarts[1].fire('click');await settle();assert.equal($('compare-content').querySelectorAll('iframe').length,2);$('compare-dialog').close();assert.equal($('compare-content').querySelectorAll('iframe').length,0);
+$('clear-selection').fire('click');assert.equal($('compare-tray').hidden,true);assert.equal(inputs[2].disabled,false);
+const starts=$('gallery').querySelectorAll('.live-start');starts[0].fire('click');await settle();assert.equal($('gallery').querySelectorAll('iframe').length,1);starts[1].fire('click');await settle();assert.equal($('gallery').querySelectorAll('iframe').length,2);
+document.hidden=true;document.fire('visibilitychange');assert.equal($('gallery').querySelectorAll('iframe').length,0);document.hidden=false;
+for(const start of starts.slice(2,8))start.fire('click');await settle();assert.equal($('gallery').querySelectorAll('iframe').length,6);
+const luna=$('gallery').querySelectorAll('.model-card').find(e=>e.dataset.model==='bottle-ocean--gpt-6-luna');luna.querySelector('[data-open]').fire('click');assert.equal($('detail-dialog').open,true);assert.match($('detail-content').innerHTML,/beamShape.close is not a function/);assert.equal($('detail-content').querySelectorAll('iframe').length,0);
+$('next-model').fire('click');assert.match(window.location.hash,/bottle-ocean--gpt-5.6-sol/);$('previous-model').fire('click');assert.match(window.location.hash,/bottle-ocean--gpt-6-luna/);
+$('tab-preview').fire('click');assert.equal($('detail-content').querySelectorAll('iframe').length,0);
+$('detail-content').querySelector('.live-start').fire('click');await settle();const frame=$('detail-content').querySelector('iframe');assert.ok(frame);assert.equal(frame.getAttribute('sandbox'),'allow-scripts');assert.equal(frame.getAttribute('referrerpolicy'),'no-referrer');assert.match(frame.srcdoc,/connect-src 'none'/);assert.match(frame.srcdoc,/frame-src 'none'/);assert.match(frame.srcdoc,/console.error=/);
+frame.contentWindow={};const channel=frame.srcdoc.match(/channel:"([^"]+)"/)[1];
+for(const handler of window.events.message||[])handler({source:{},data:{channel,type:'error',message:'wrong frame'}});
+assert.equal($('detail-content').querySelector('.live-error').hidden,true);
+for(const handler of window.events.message||[])handler({source:frame.contentWindow,data:{channel,type:'error',message:'Error creating WebGL context.'}});
+assert.match($('detail-content').querySelector('.live-error').textContent,/Error creating WebGL context/);
+assert.equal($('detail-content').querySelector('.live-error').hidden,false);
+$('detail-content').querySelector('.live-stop').fire('click');assert.equal($('detail-content').querySelectorAll('iframe').length,0);
+$('tab-source').fire('click');await settle();assert.equal($('detail-content').querySelectorAll('iframe').length,0);assert.equal($('detail-viewport').querySelector('pre').textContent,await readFile('artifacts/gpt-6-luna/source.html','utf8'));
+$('tab-image').fire('keydown',{key:'ArrowRight'});assert.equal($('tab-source').getAttribute('aria-selected'),'true');
+$('close-detail').fire('click');assert.equal($('detail-dialog').open,false);assert.equal($('detail-content').children.length,0);
+$('open-prompt').fire('click');assert.equal($('prompt-dialog').open,true);assert.equal($('prompt-text').textContent,manifest.prompts[0].promptText);
+window.location.hash='#/';assert.equal($('library-view').hidden,false);assert.equal($('prompt-dialog').open,false);assert.equal($('compare-tray').hidden,true);
+window.location.hash='#/prompts/bottle-ocean/runs/bottle-ocean--gpt-6.1-sol';assert.equal($('detail-dialog').open,true);assert.match($('detail-content').innerHTML,/gpt-6.1-sol/);
+window.location.hash='#/prompts/missing';assert.equal($('route-error').hidden,false);assert.equal($('detail-dialog').open,false);
+window.location.hash='#/prompts/bottle-ocean/runs/missing';assert.equal($('route-error').hidden,false);
+window.location.hash='#/';assert.equal($('route-error').hidden,true);
+// The new real SVG test has no supplied prompt; no inherited bottle prompt/download.
+window.location.hash='#/prompts/pelican-bicycle';assert.equal($('workspace-title').textContent,'鹈鹕骑自行车');assert.equal($('gallery').querySelectorAll('.model-card').length,8);assert.equal($('workspace-file-count').textContent,24);assert.equal($('prompt-download').hidden,true);assert.match($('prompt-text').textContent,/未提供原始提示词/);assert.equal($('prompt-button-title').textContent,'查看测试说明');
+window.location.hash='#/prompts/pelican-bicycle/runs/pelican-bicycle--gpt-6-luna';assert.equal($('detail-dialog').open,true);assert.doesNotMatch($('detail-content').innerHTML,/beamShape.close/);assert.match($('detail-viewport').innerHTML,/HTML \/ SVG/);
+window.location.hash='#/prompts/pelican-bicycle/runs/bottle-ocean--gpt-6-luna';assert.equal($('route-error').hidden,false);
+window.location.hash='#/prompts/bottle-ocean';assert.equal($('prompt-download').hidden,false);assert.equal($('prompt-text').textContent,manifest.prompts[0].promptText);
+window.location.hash='#/';
+// A temporary in-memory fixture checks multi-prompt isolation without shipping a fabricated test.
+const fixtureRun={...manifest.runs[0],id:'fixture--run',promptId:'fixture'};
+const fixturePrompt={...manifest.prompts[0],id:'fixture',title:'隔离测试夹具',coverRunId:fixtureRun.id,runIds:[fixtureRun.id]};
+manifest.runs.push(fixtureRun);manifest.prompts.push(fixturePrompt);
+// Re-initialize with the extra fixture to build a new run index.
+document.innerHTML=await readFile('index.html','utf8');document.body=document.querySelector('body');window.events={};window.location._hash='';$('sort').value='default';
+vm.runInContext(await readFile('assets/preview.js','utf8'),context);
+vm.runInContext(await readFile('assets/app.js','utf8'),context);assert.equal($('prompt-list').querySelectorAll('.prompt-card').length,3);
+window.location.hash='#/prompts/bottle-ocean';const choice=$('gallery').querySelector('input');choice.checked=true;choice.fire('change');assert.equal($('compare-tray').hidden,false);
+window.location.hash='#/prompts/fixture';assert.equal($('gallery').querySelectorAll('.model-card').length,1);assert.equal($('workspace-title').textContent,'隔离测试夹具');assert.equal($('compare-tray').hidden,true);assert.equal($('prompt-text').textContent,fixturePrompt.promptText);
+window.location.hash='#/prompts/fixture/runs/bottle-ocean--gpt-6.1-sol';assert.equal($('route-error').hidden,false);
+window.location.hash='#/prompts/bottle-ocean';assert.equal($('gallery').querySelectorAll('.model-card').length,8);
+console.log('PASS: semantic DOM checks for prompt library, categories, prompt search, valid/invalid deep links, browser-style route transitions, per-prompt model isolation, comparison isolation, model search/sort, dialogs, keyboard tabs, source, opt-in sandbox and cleanup');
+console.log('Note: these checks do not replace real-browser visual or WebGL QA.');

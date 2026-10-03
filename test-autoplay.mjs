@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+import {Element} from './test-dom.mjs';
+const document=new Element('document');document.createElement=tag=>new Element(tag);
+let now=0,timerId=0,reads=0;const timers=new Map(), observers=[];
+const window={innerHeight:800,innerWidth:1200,events:{},addEventListener(type,fn){(this.events[type]??=[]).push(fn);}};
+const fire=(type,event={})=>(window.events[type]||[]).forEach(fn=>fn(event));
+const ctx=vm.createContext({window,document,Map,Set,String,console,setTimeout(fn,delay){const id=++timerId;timers.set(id,{fn,due:now+delay});return id;},clearTimeout(id){timers.delete(id);},IntersectionObserver:class{constructor(callback){this.callback=callback;this.nodes=new Set();observers.push(this);}observe(node){this.nodes.add(node);}unobserve(node){this.nodes.delete(node);}}});
+vm.runInContext(await readFile('assets/preview.js','utf8'),ctx);
+const settle=async(ms=220)=>{now+=ms;let cycles=0;for(;;){const due=[...timers].filter(([,timer])=>timer.due<=now);if(!due.length)break;assert.ok(++cycles<100,'no scheduler loop');for(const[id,timer]of due){timers.delete(id);timer.fn();}await Promise.resolve();}await Promise.resolve();await Promise.resolve();};
+const models=new Map(['a','b','c','d','e','f','g','h','i','j','k','l','m','fail','pending'].map(id=>[id,{id,model:id}]));let resolvePending;
+const manager=window.createPreviewManager({runs:models,icon:()=>'',esc:String,translate:String,localize(){},readSource:async model=>{reads++;if(model.id==='fail')throw new Error('source failed');if(model.id==='pending')return new Promise(resolve=>{resolvePending=resolve;});return '<html><head></head><body>original</body></html>';}});
+const box=(top=100,left=0)=>({top,bottom:top+400,left,right:left+500,width:500,height:400});
+function surface(ids,kind='normal',dialog=false){const root=new Element(dialog?'dialog':'section');root.innerHTML=ids.map(id=>manager.markup(models.get(id),kind)).join('');document.appendChild(root);root.querySelectorAll('.live-stage').forEach((stage,index)=>{stage.innerHTML=manager.markup(models.get(ids[index]),kind).match(/<div class="live-stage">([\s\S]*?)<\/div><div class="live-controls">/)[1];stage.box=box(100,0);});manager.mount(root);return root;}
+const frames=root=>root.querySelectorAll('iframe');
+const cards=surface(['a','b','c','d','e','f','g']);assert.equal(reads,0);await settle();assert.equal(frames(cards).length,6);assert.equal(reads,6,'six visible creations autostart without a click');
+const a=cards.querySelectorAll('.live-preview')[0],b=cards.querySelectorAll('.live-preview')[1],g=cards.querySelectorAll('.live-preview')[6],firstFrame=frames(a)[0];
+for(let i=0;i<5;i++){a.querySelector('.live-stage').box=box(90+i);fire('scroll');await settle();assert.equal(frames(a)[0],firstFrame,'visible incumbent retained');assert.equal(frames(cards).length,6);}
+g.querySelector('.live-start').fire('click');await settle();assert.equal(frames(cards).length,6);assert.equal(frames(g).length,1);assert.equal(frames(a).length,0,'manual switch evicts one slot only');
+g.querySelector('.live-stage').box=box(-500);fire('scroll');await settle();assert.equal(frames(g).length,0);assert.equal(frames(a).length,1);assert.equal(frames(cards).length,6);
+b.querySelector('.live-stop').fire('click');await settle();assert.equal(frames(b).length,0);const stoppedReads=reads;
+b.querySelector('.live-stage').box=box(-500);fire('scroll');await settle();b.querySelector('.live-stage').box=box();fire('pageshow');await settle();assert.equal(reads,stoppedReads,'manual Stop survives visibility/page restoration');
+manager.release(cards);cards.replaceChildren();cards.hidden=true;
+const remount=surface(['b']);await settle();assert.equal(frames(remount).length,0,'explicit stop survives remount');remount.querySelector('.live-start').fire('click');await settle();assert.equal(frames(remount).length,1);
+document.hidden=true;document.fire('visibilitychange');assert.equal(frames(remount).length,0);document.hidden=false;document.fire('visibilitychange');await settle();assert.equal(frames(remount).length,1,'foreground resumes non-stopped scene');
+const compare=surface(['h','i','j','k','l','m'],'compare',true);await settle();assert.equal(frames(compare).length,0,'closed dialog never starts');compare.open=true;manager.refresh();await settle();assert.equal(frames(remount).length,0);assert.equal(frames(compare).length,6,'six comparison scenes autostart without underlying gallery');
+const compNodes=compare.querySelectorAll('.live-preview');for(const node of compNodes.slice(3))node.querySelector('.live-stage').box=box(900);fire('scroll');await settle();assert.equal(frames(compare).length,3,'offscreen comparison scenes stop');for(const node of compNodes.slice(3))node.querySelector('.live-stage').box=box();fire('scroll');await settle();assert.equal(frames(compare).length,6);
+const centered=frames(compare)[0];assert.equal(centered.style.left,'50%');assert.equal(centered.style.top,'50%');assert.match(centered.style.transform,/translate\(-50%, -50%\) scale/);assert.equal(centered.style.width,'960px');assert.equal(centered.style.height,'552px');
+manager.release(compare);compare.close();compare.replaceChildren();manager.refresh();await settle();assert.equal(frames(remount).length,1,'closing modal resumes gallery');
+const frame=frames(remount)[0];frame.contentWindow={};const channel=frame.srcdoc.match(/channel:"([^"]+)"/)[1];fire('message',{source:frame.contentWindow,data:{channel,type:'error',message:'WebGL failed'}});const errorReads=reads;
+remount.querySelector('.live-stage').box=box(-500);fire('scroll');await settle();remount.querySelector('.live-stage').box=box();fire('scroll');await settle();for(let i=0;i<3;i++){fire('resize');await settle();}assert.equal(reads,errorReads,'runtime errors never auto retry');assert.equal(frames(remount).length,0);assert.match(remount.querySelector('.live-error').textContent,/WebGL failed/);
+remount.querySelector('.live-start').fire('click');await settle();assert.equal(frames(remount).length,1,'manual retry remains possible');manager.release(remount);remount.hidden=true;
+const failure=surface(['fail']);await settle();const failReads=reads;for(let i=0;i<3;i++){fire('scroll');await settle();}assert.equal(reads,failReads,'source errors never auto retry');manager.release(failure);failure.hidden=true;
+const pending=surface(['pending']);await settle();assert.equal(pending.querySelector('.live-stop').hidden,false,'pending load can be stopped');manager.release(pending);pending.hidden=true;resolvePending('<html><head></head></html>');await settle();assert.equal(frames(pending).length,0,'released fetch completion cannot leak a frame');assert.equal(document.querySelectorAll('iframe').length,0);
+assert.equal(observers[0].nodes.size,0,'all released nodes unobserved');
+console.log('PASS: automatic entry, stable visibility priority, global six-slot limit and centered fixed viewport, dialogs, offscreen/foreground/pageshow, explicit Stop across remounts, manual retry, runtime/source-error suppression, pending-load cancellation, no context leaks');
