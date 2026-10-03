@@ -1,16 +1,22 @@
 # AI Visual Bench
 
-A multilingual, prompt-first archive for comparing original AI-generated visual outputs. The interface supports Simplified Chinese, Traditional Chinese, and English.
+[Explore the live AI Visual Bench](https://bottle-ocean-benchmark.fizzy-tulip-7700.chatgpt.site)
 
-## Features
+**Repository status:** this source snapshot does not yet include the original test artifacts. A fresh clone cannot run the full gallery or the artifact-dependent build/tests. The live site may include newer features and data.
 
-- Two test prompts and 16 model runs, with 49 original downloadable artifacts
+A multilingual, prompt-first archive for comparing original AI-generated visual outputs. This source snapshot supports Simplified Chinese, Traditional Chinese, and English.
+
+## App capabilities
+
+The following capabilities require the original test artifacts, which can be explored on the live site but are not included in this repository.
+
+- Two test prompts and 16 model runs in the snapshot manifest, referencing 49 original artifacts
 - Live, sandboxed HTML previews and comparison of up to six models
 - Model navigation, source viewing, screenshots, original prompts, and token usage
 - Anonymous 1–10 community ratings, shared averages, and vote counts backed by a database
 - Search, categories, sorting, deep links, and responsive layouts
 
-The current datasets are **Ocean in a Bottle (瓶中沧海)** and **Pelican Riding a Bicycle (鹈鹕骑自行车)**, with eight model runs each. The second dataset did not include its original prompt, and the interface labels this explicitly. Original errors are retained as evidence rather than silently repaired.
+The datasets described in this snapshot are **Ocean in a Bottle (瓶中沧海)** and **Pelican Riding a Bicycle (鹈鹕骑自行车)**, with eight model runs each. The second dataset did not include its original prompt when this source snapshot was created, and this version labels that explicitly. Original errors are retained as evidence rather than silently repaired.
 
 ## Architecture
 
@@ -23,7 +29,7 @@ The gallery can be inspected as static files, but shared ratings require the Wor
 
 ## Build and test
 
-Use Node.js 22.13 or newer (the backend test suite uses `node:sqlite`) and npm.
+Use Node.js 22.13 or newer (the backend test suite uses `node:sqlite`) and npm. The complete build and test commands below require the matching `artifacts/` dataset, which is currently absent from this repository.
 
 ```sh
 npm ci
@@ -67,7 +73,7 @@ This is anonymous community feedback, not verified one-person-one-vote or a cont
 
 ## Artifact fidelity and sandboxing
 
-All 49 public original artifacts are byte-identical to the supplied files. `assets/manifest.json` records filenames, sizes, and SHA-256 hashes. Private export reports, source archive ZIPs, local paths, credentials, hosting metadata, and actual vote data are excluded.
+`assets/manifest.json` records filenames, sizes, and SHA-256 hashes for the 49 original artifacts referenced by this snapshot. The artifact files themselves have not been added to this repository. Private export reports, source archive ZIPs, local paths, credentials, hosting metadata, and actual vote data are excluded.
 
 Live previews use `sandbox="allow-scripts"` without same-origin, popup, form, or navigation privileges. A derived preview wrapper adds a restrictive CSP and error reporting; the original files are unchanged. Direct HTML artifact responses are served as downloads with additional sandbox headers. Keep these server protections when deploying elsewhere.
 
@@ -75,7 +81,7 @@ Live previews use `sandbox="allow-scripts"` without same-origin, popup, form, or
 
 - `assets/manifest.json`: canonical prompt/run/artifact data
 - `assets/`: interface, localization, preview lifecycle, and rating client
-- `artifacts/`: unchanged original HTML, screenshots, sessions, and prompt
+- `artifacts/`: expected location for original HTML, screenshots, sessions, and prompt; these files are not included in the repository
 - `server/worker.js`: static serving and ratings API
 - `db/schema.ts`, `drizzle/`: schema and migrations
 - `test*.mjs`: automated checks
