@@ -1,0 +1,661 @@
+window.TEST_DATA = {
+  "schemaVersion": 2,
+  "title": "AI 测试库",
+  "description": "按测试提示词归档模型输出与生成记录。",
+  "categories": [
+    {
+      "id": "3d-webgl",
+      "name": "3D / WebGL",
+      "description": "三维场景、材质与动画交互"
+    },
+    {
+      "id": "2d-svg",
+      "name": "2D / SVG",
+      "description": "使用 HTML 与 SVG 展示二维动画作品。"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "bottle-ocean",
+      "title": "瓶中沧海",
+      "summary": "在横卧玻璃瓶中构建体素海洋、三桅帆船与珊瑚岛，呈现风暴、昼夜与航行动画。",
+      "categoryId": "3d-webgl",
+      "tags": [
+        "Three.js r160",
+        "体素场景",
+        "动画交互"
+      ],
+      "requirements": [
+        "单文件 HTML",
+        "WebGL / Three.js",
+        "交互与昼夜循环"
+      ],
+      "promptText": "用WebGL(Three.jsr160CDN)创作一个体素微缩场景——瓶中沧海:一艘多桅\n帆船在封闭于横卧玻璃瓶内的海洋上航行，输出为可直接在Chrome打开的\n单个HTML文件。\n瓶与陈设:玻璃瓶身有菲涅尔边缘光与高光，软木塞+红蜡封+颈绳吊牌，搁\n在木托架上，置于木桌面(旁有旧书、黄铜望远镜)，黄昏房间光氛围。瓶内\n海洋:体素波面在GPU上起伏、浪尖泛白沫;水面以下是整体铺满的渐变深水\n体(无海床)，半透明可透视--水底沉着宝箱(金光)、沉锚、双耳瓶、珊\n瑚，气泡上升。珊瑚岛上有红白灯塔(旋转光束)、棕榈、暖窗小屋、码头与\n小艇、宝藏。帆船:三桅方帆+红纹主帆+全套索具，绕岛航行;浮力物理:四\n点浪高采样驱动升沉/纵摇/横摇，带船艏飞沫与尾迹。空中:六只海鸥盘旋，\n积云在岛与桅杆之上，鲸鱼周期性跃身出水，浮标、鱼群、螃蟹点缀\n一切元素严格封闭在瓶内，任何视角不得越出轮廓。交互:拖动环视(闲置自\n动恢复旋转)、滚轮缩放;按住Space掀起风暴--浪涌飞沫、瓶体在托架上摇\n晃而瓶内水面保持水平、闪电与乌云;延时摄影/倍速(x4/x12/x1/暂停)驱动昼\n夜流转;太阳月亮移动、\n黎明正午黄昏子夜四段天色、子夜星空，夜晚灯火热光\n更浓。\n技术:InstancedMesh体素批渲染+自定义 shader(玻璃、水面顶点位移)，目\n标60FPS。 直接做出来\n",
+      "promptFile": "artifacts/prompt.md",
+      "promptArtifact": {
+        "originalName": "1.瓶中沧海.md",
+        "path": "artifacts/prompt.md",
+        "bytes": 1490,
+        "sha256": "3a194ba5c8f5536d12bcf6cd761d67cff9cfc29cceba6f50d878f848c5e1d66a"
+      },
+      "sourceArchive": "AI-IQ-Test-瓶中沧海.zip",
+      "coverRunId": "bottle-ocean--gpt-6.1-sol",
+      "runIds": [
+        "bottle-ocean--gpt-6.1-sol",
+        "bottle-ocean--gpt-6-astra",
+        "bottle-ocean--gpt-6-sol",
+        "bottle-ocean--gpt-6-luna",
+        "bottle-ocean--gpt-5.6-sol",
+        "bottle-ocean--gpt-5.6-terra",
+        "bottle-ocean--gpt-5.6-luna",
+        "bottle-ocean--gpt-5.5"
+      ]
+    },
+    {
+      "id": "pelican-bicycle",
+      "title": "鹈鹕骑自行车",
+      "summary": "围绕鹈鹕骑自行车主题的原始 HTML / SVG 动画作品与 Token 记录。",
+      "categoryId": "2d-svg",
+      "tags": [
+        "SVG 动画",
+        "2D 插画",
+        "骑行动画"
+      ],
+      "requirements": [],
+      "promptStatus": "not_provided",
+      "promptText": null,
+      "promptFile": null,
+      "promptArtifact": null,
+      "sourceArchive": "鹈鹕骑自行车-测试结果zip.zip",
+      "coverRunId": "pelican-bicycle--gpt-6.1-sol",
+      "runIds": [
+        "pelican-bicycle--gpt-6.1-sol",
+        "pelican-bicycle--gpt-6-astra",
+        "pelican-bicycle--gpt-6-sol",
+        "pelican-bicycle--gpt-6-luna",
+        "pelican-bicycle--gpt-5.6-sol",
+        "pelican-bicycle--gpt-5.6-terra",
+        "pelican-bicycle--gpt-5.6-luna",
+        "pelican-bicycle--gpt-5.5"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 4295589,
+      "cached_input_tokens": 4127616,
+      "output_tokens": 39733,
+      "reasoning_output_tokens": 13943,
+      "total_tokens": 4335322,
+      "id": "bottle-ocean--gpt-6.1-sol",
+      "screenshot": "artifacts/gpt-6.1-sol/screenshot.png",
+      "source": "artifacts/gpt-6.1-sol/source.html",
+      "session": "artifacts/gpt-6.1-sol/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-6.1-sol.png",
+          "path": "artifacts/gpt-6.1-sol/screenshot.png",
+          "bytes": 452783,
+          "sha256": "f3343bba17db8bf4791e290c506f11d969d708c262a61175a461d63a16acd657"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6.1-sol.html",
+          "path": "artifacts/gpt-6.1-sol/source.html",
+          "bytes": 54123,
+          "sha256": "25ae2262aaac31dd1ca15b1bf12278b023ae91206897d85f097bba4f3c2351ba"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6.1-sol-session.json",
+          "path": "artifacts/gpt-6.1-sol/session.json",
+          "bytes": 210,
+          "sha256": "7e0291a3e3a9636bfbdb3d98d2223fa074adad86c043b4aacdb3a2265a661fc2"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 4376131,
+      "cached_input_tokens": 4230528,
+      "output_tokens": 56400,
+      "reasoning_output_tokens": 11360,
+      "total_tokens": 4432531,
+      "id": "bottle-ocean--gpt-6-astra",
+      "screenshot": "artifacts/gpt-6-astra/screenshot.png",
+      "source": "artifacts/gpt-6-astra/source.html",
+      "session": "artifacts/gpt-6-astra/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-6-astra.png",
+          "path": "artifacts/gpt-6-astra/screenshot.png",
+          "bytes": 1735734,
+          "sha256": "cddd1b7b7a317f5b4e79033e8ee90288a04ac8ee23b846a4e8b38647b626c67a"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6-astra.html",
+          "path": "artifacts/gpt-6-astra/source.html",
+          "bytes": 52793,
+          "sha256": "9d8ed3b8d1d797d557788c436433e26bd8d0306611a28e444c87b084cdfdf938"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6-astra-session.json",
+          "path": "artifacts/gpt-6-astra/session.json",
+          "bytes": 210,
+          "sha256": "dfc1ee45e86637b0e32db6698355ef25dda04baea89163d81ec20a3f0f5250c8"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-6-sol",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 1543221,
+      "cached_input_tokens": 1467008,
+      "output_tokens": 33762,
+      "reasoning_output_tokens": 11846,
+      "total_tokens": 1576983,
+      "id": "bottle-ocean--gpt-6-sol",
+      "screenshot": "artifacts/gpt-6-sol/screenshot.png",
+      "source": "artifacts/gpt-6-sol/source.html",
+      "session": "artifacts/gpt-6-sol/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-6-sol.png",
+          "path": "artifacts/gpt-6-sol/screenshot.png",
+          "bytes": 232682,
+          "sha256": "52d496bc199a106875f875957388506c47942c06a66fae91eb9a5fcdf8e4b9c1"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6-sol.html",
+          "path": "artifacts/gpt-6-sol/source.html",
+          "bytes": 40818,
+          "sha256": "e89592bf37f9f9af079c532313578a662606e8839c53c8595d1c7c70dc6646d5"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6-sol-session.json",
+          "path": "artifacts/gpt-6-sol/session.json",
+          "bytes": 208,
+          "sha256": "0b071943ac0c2ea270f80811ace89cbd6d420a3f9c76e7c30c0b2faeb5b6808c"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-6-luna",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 3205799,
+      "cached_input_tokens": 3070208,
+      "output_tokens": 68920,
+      "reasoning_output_tokens": 40695,
+      "total_tokens": 3274719,
+      "id": "bottle-ocean--gpt-6-luna",
+      "screenshot": "artifacts/gpt-6-luna/screenshot.png",
+      "source": "artifacts/gpt-6-luna/source.html",
+      "session": "artifacts/gpt-6-luna/session.json",
+      "originalError": "beamShape.close is not a function",
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-6-luna.png",
+          "path": "artifacts/gpt-6-luna/screenshot.png",
+          "bytes": 23611,
+          "sha256": "882ee28ecf56427c50ee9c3c7cf329d88d12c7e9e8e6d996b03ce81e59b3f9b3"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6-luna.html",
+          "path": "artifacts/gpt-6-luna/source.html",
+          "bytes": 51856,
+          "sha256": "5e7e8391708785b7b36ff6461403dd529c4df881b992e29b3ecbd38f6ca2e91e"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-6-luna-session.json",
+          "path": "artifacts/gpt-6-luna/session.json",
+          "bytes": 209,
+          "sha256": "199f8ae690612ef52d5508132f70c28652ed745982b91a7ad019c380c3ec78f8"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 4727682,
+      "cached_input_tokens": 4593152,
+      "output_tokens": 34746,
+      "reasoning_output_tokens": 12661,
+      "total_tokens": 4762428,
+      "id": "bottle-ocean--gpt-5.6-sol",
+      "screenshot": "artifacts/gpt-5.6-sol/screenshot.png",
+      "source": "artifacts/gpt-5.6-sol/source.html",
+      "session": "artifacts/gpt-5.6-sol/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-5.6-sol.png",
+          "path": "artifacts/gpt-5.6-sol/screenshot.png",
+          "bytes": 1409303,
+          "sha256": "0413a44ddb387207ec3f39cb19acb80710cb54a613a05cc2dff2895b03e1b34c"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.6-sol.html",
+          "path": "artifacts/gpt-5.6-sol/source.html",
+          "bytes": 43150,
+          "sha256": "0b3adb6f9a7762aefd035c6f2923b4c886f2502c024381a06c0ecb90e7f90743"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.6-sol-session.json",
+          "path": "artifacts/gpt-5.6-sol/session.json",
+          "bytes": 210,
+          "sha256": "c72c4f1e6e56527718774cb14ea2b0e8be983639de69052a5dd3163d091c250c"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 1280553,
+      "cached_input_tokens": 1204736,
+      "output_tokens": 19541,
+      "reasoning_output_tokens": 6009,
+      "total_tokens": 1300094,
+      "id": "bottle-ocean--gpt-5.6-terra",
+      "screenshot": "artifacts/gpt-5.6-terra/screenshot.png",
+      "source": "artifacts/gpt-5.6-terra/source.html",
+      "session": "artifacts/gpt-5.6-terra/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-5.6-terra.png",
+          "path": "artifacts/gpt-5.6-terra/screenshot.png",
+          "bytes": 670306,
+          "sha256": "560ee92735c55c08de40ea65c7ba052c00a37db50261e50100f8995bb03ed42a"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.6-terra.html",
+          "path": "artifacts/gpt-5.6-terra/source.html",
+          "bytes": 23916,
+          "sha256": "bd3d969e2c61540aea2a3b2dacb7436d52faf138dd341805a6e2654fc36d4d4f"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.6-terra-session.json",
+          "path": "artifacts/gpt-5.6-terra/session.json",
+          "bytes": 211,
+          "sha256": "36bc53cb2105861a09652cef4bf2d9117ae3dc630a15bede553087aa3b9768f1"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 1300675,
+      "cached_input_tokens": 1212160,
+      "output_tokens": 26381,
+      "reasoning_output_tokens": 10562,
+      "total_tokens": 1327056,
+      "id": "bottle-ocean--gpt-5.6-luna",
+      "screenshot": "artifacts/gpt-5.6-luna/screenshot.png",
+      "source": "artifacts/gpt-5.6-luna/source.html",
+      "session": "artifacts/gpt-5.6-luna/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-5.6-luna.png",
+          "path": "artifacts/gpt-5.6-luna/screenshot.png",
+          "bytes": 1106438,
+          "sha256": "9f7495386a5e5b98c4fe171e2825691f771642097cd078b59c81bc8794bb437c"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.6-luna.html",
+          "path": "artifacts/gpt-5.6-luna/source.html",
+          "bytes": 36867,
+          "sha256": "7e152f3706f69727874367753842325c5f59113da3a753a534b57c2460e19ccd"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.6-luna-session.json",
+          "path": "artifacts/gpt-5.6-luna/session.json",
+          "bytes": 211,
+          "sha256": "3b408faded231e9c2e8672b44e51ec451fc78460f4f052306f1a3328dd6d6bf5"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "model": "gpt-5.5",
+      "reasoning_effort": "xhigh",
+      "input_tokens": 3240120,
+      "cached_input_tokens": 3042304,
+      "output_tokens": 41936,
+      "reasoning_output_tokens": 7056,
+      "total_tokens": 3282056,
+      "id": "bottle-ocean--gpt-5.5",
+      "screenshot": "artifacts/gpt-5.5/screenshot.png",
+      "source": "artifacts/gpt-5.5/source.html",
+      "session": "artifacts/gpt-5.5/session.json",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "瓶中沧海-gpt-5.5.png",
+          "path": "artifacts/gpt-5.5/screenshot.png",
+          "bytes": 1315447,
+          "sha256": "87fe7e42fdb817e9472f00c7ebfdce195e041acb95572fa94a25d498e3813a89"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.5.html",
+          "path": "artifacts/gpt-5.5/source.html",
+          "bytes": 58597,
+          "sha256": "cfceaf844545a36ea667e8a137268b14342f0225ee42739a75f5cde1b9679df1"
+        },
+        {
+          "originalName": "瓶中沧海-gpt-5.5-session.json",
+          "path": "artifacts/gpt-5.5/session.json",
+          "bytes": 205,
+          "sha256": "489ab99d23b056b8b358becee080f4caf303b1de2a523f36eeb71ff94dbec098"
+        }
+      ],
+      "promptId": "bottle-ocean"
+    },
+    {
+      "id": "pelican-bicycle--gpt-6.1-sol",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 485.418,
+      "input_tokens": 802633,
+      "cached_input_tokens": 688512,
+      "output_tokens": 13071,
+      "reasoning_output_tokens": 2111,
+      "total_tokens": 815704,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6.1-sol.html",
+          "path": "artifacts/pelican-bicycle/gpt-6.1-sol/source.html",
+          "bytes": 20932,
+          "sha256": "0d5b66a03eb8bb695f185de084a4693de322385245256698c12831f7d7622255"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6.1-sol.png",
+          "path": "artifacts/pelican-bicycle/gpt-6.1-sol/screenshot.png",
+          "bytes": 243490,
+          "sha256": "8b6e45298b7224304f21a4019a65868e983ac9553a6725cae9893fd747431576"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6.1-sol-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-6.1-sol/session.json",
+          "bytes": 243,
+          "sha256": "021919a31ca372ffbfc594b759eb67dd4cc416b3fe4f962ce21563253162807c"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-6.1-sol/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-6.1-sol/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-6.1-sol/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-6-astra",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 1103.21,
+      "input_tokens": 3605359,
+      "cached_input_tokens": 3460224,
+      "output_tokens": 20952,
+      "reasoning_output_tokens": 3271,
+      "total_tokens": 3626311,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-astra.html",
+          "path": "artifacts/pelican-bicycle/gpt-6-astra/source.html",
+          "bytes": 30312,
+          "sha256": "434c90ecb3f03c553ccad0f1655d16db1d14ce78648f59394ec2cd5c45b0f376"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-astra.png",
+          "path": "artifacts/pelican-bicycle/gpt-6-astra/screenshot.png",
+          "bytes": 165490,
+          "sha256": "7d28fc10935593f07997c324a5e4c0dee121f51435cf8f17ad46b5028f329b15"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-astra-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-6-astra/session.json",
+          "bytes": 246,
+          "sha256": "3127710c29d9c64b3f465751f08018a13b50e890cb08dbe1ad2c824ecb2dcc2e"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-6-astra/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-6-astra/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-6-astra/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-6-sol",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-6-sol",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 463.935,
+      "input_tokens": 1635624,
+      "cached_input_tokens": 1565056,
+      "output_tokens": 14219,
+      "reasoning_output_tokens": 3232,
+      "total_tokens": 1649843,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-sol.html",
+          "path": "artifacts/pelican-bicycle/gpt-6-sol/source.html",
+          "bytes": 17865,
+          "sha256": "da76b06f83f51731993eae21d445b407da8407d01b369b8478225b3720c72db6"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-sol.png",
+          "path": "artifacts/pelican-bicycle/gpt-6-sol/screenshot.png",
+          "bytes": 294398,
+          "sha256": "5ddd40ec204a1b341da6d4bc21647f4cd88c32b72c1460e630b268626094fa28"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-sol-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-6-sol/session.json",
+          "bytes": 244,
+          "sha256": "839d8d8db0971a470a477c04c8810984f1395c6edc6c90eb65574debf1b4040c"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-6-sol/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-6-sol/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-6-sol/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-6-luna",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 349.192,
+      "input_tokens": 1046946,
+      "cached_input_tokens": 967808,
+      "output_tokens": 13741,
+      "reasoning_output_tokens": 5500,
+      "total_tokens": 1060687,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-luna.html",
+          "path": "artifacts/pelican-bicycle/gpt-6-luna/source.html",
+          "bytes": 14435,
+          "sha256": "c2ffa8d0879943333996b4ef654520db0c82ca3f17d85b57f1e97741443014a1"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-luna.png",
+          "path": "artifacts/pelican-bicycle/gpt-6-luna/screenshot.png",
+          "bytes": 238183,
+          "sha256": "2c040f0aa985783fba64016cb7e6788cf3806894e965fd2a9c344ddf6d51e736"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-6-luna-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-6-luna/session.json",
+          "bytes": 244,
+          "sha256": "9d23aed55aa7d73d2c58fcdb89e24acbbefe0005057b51794d53829f7679c7b9"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-6-luna/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-6-luna/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-6-luna/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-5.6-sol",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-5.6-sol",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 365.404,
+      "input_tokens": 910151,
+      "cached_input_tokens": 845056,
+      "output_tokens": 11963,
+      "reasoning_output_tokens": 1361,
+      "total_tokens": 922114,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-sol.html",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-sol/source.html",
+          "bytes": 17556,
+          "sha256": "50a27c57ba4c2894951b5f42bd79735780b7cf013723c1a2f7820b98cd28377a"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-sol.png",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-sol/screenshot.png",
+          "bytes": 214014,
+          "sha256": "a240555d70e054be786cd3668ca543dedb59827ecb05259955f65d5f74dd086e"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-sol-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-sol/session.json",
+          "bytes": 243,
+          "sha256": "ad4df15d9e07db710cf7db76bf5541b5144ce69e98d57107dfa7aee9f100f67e"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-5.6-sol/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-5.6-sol/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-5.6-sol/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-5.6-terra",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-5.6-terra",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 216.222,
+      "input_tokens": 909817,
+      "cached_input_tokens": 830976,
+      "output_tokens": 8265,
+      "reasoning_output_tokens": 1325,
+      "total_tokens": 918082,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-terra.html",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-terra/source.html",
+          "bytes": 10706,
+          "sha256": "63f0e4a80e030afbd5d8ae4fd062b4f7cd003f2b88908019ff26958bfe9698a0"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-terra.png",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-terra/screenshot.png",
+          "bytes": 123467,
+          "sha256": "d1d458d8b91cfd6c4862f181745e203441d411c6ed9cc588aa34a12d22e2bb36"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-terra-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-terra/session.json",
+          "bytes": 244,
+          "sha256": "a8a517b69cb7a85bc9ace0452cac3d2beb0ebb00d211370e74f18445cec40b54"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-5.6-terra/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-5.6-terra/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-5.6-terra/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-5.6-luna",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-5.6-luna",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 239.757,
+      "input_tokens": 679993,
+      "cached_input_tokens": 604288,
+      "output_tokens": 9373,
+      "reasoning_output_tokens": 1926,
+      "total_tokens": 689366,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-luna.html",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-luna/source.html",
+          "bytes": 13530,
+          "sha256": "a498b27bcc30d34162240221922dfebb96cec8e61d5fee8459d876b247ca6431"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-luna.png",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-luna/screenshot.png",
+          "bytes": 127727,
+          "sha256": "47141b25bac6c8ecec220ee61af2e0c8683cef7a3bb6b0f4bc3ce9c84ddae62a"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.6-luna-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-5.6-luna/session.json",
+          "bytes": 243,
+          "sha256": "14cded94ca43e06acc81f22221883a0c7706defcea3ae0ef0c218a9023e15fe2"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-5.6-luna/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-5.6-luna/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-5.6-luna/session.json"
+    },
+    {
+      "id": "pelican-bicycle--gpt-5.5",
+      "promptId": "pelican-bicycle",
+      "model": "gpt-5.5",
+      "reasoning_effort": "xhigh",
+      "execution_time_seconds": 313.621,
+      "input_tokens": 655400,
+      "cached_input_tokens": 543616,
+      "output_tokens": 10855,
+      "reasoning_output_tokens": 2082,
+      "total_tokens": 666255,
+      "rendering": "svg",
+      "originalError": null,
+      "artifacts": [
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.5.html",
+          "path": "artifacts/pelican-bicycle/gpt-5.5/source.html",
+          "bytes": 14410,
+          "sha256": "d370dd7323197292985840a9a48332a6d9f99d91d041d9e3d8190d70b9ab0a96"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.5.png",
+          "path": "artifacts/pelican-bicycle/gpt-5.5/screenshot.png",
+          "bytes": 218869,
+          "sha256": "9873e35fff1208e3d8b4286b569e8743373d101c6e1d62a3032c9bb1e6592544"
+        },
+        {
+          "originalName": "鹈鹕骑自行车-gpt-5.5-session.json",
+          "path": "artifacts/pelican-bicycle/gpt-5.5/session.json",
+          "bytes": 239,
+          "sha256": "f293918a5ae070ea9aa84dd937b784ca55af4928835d5a95b670d092ce6c563f"
+        }
+      ],
+      "source": "artifacts/pelican-bicycle/gpt-5.5/source.html",
+      "screenshot": "artifacts/pelican-bicycle/gpt-5.5/screenshot.png",
+      "session": "artifacts/pelican-bicycle/gpt-5.5/session.json"
+    }
+  ]
+};
